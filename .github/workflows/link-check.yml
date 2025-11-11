@@ -1,0 +1,20 @@
+name: Link checker
+on:
+  schedule:
+    - cron: '0 6 * * *'    # daily 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check links on site map
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: --verbose --no-progress $(cat config/urls.txt)
+      - name: Upload lychee report
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-report
+          path: lychee/out.md
